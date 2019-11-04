@@ -1,9 +1,14 @@
 フルスクラッチでwasmしたい
 
+準備(Optional)
+```
+cargo install --git 'https://github.com/alexcrichton/wasm-gc'
+```
+
 ビルド
 ```
 cargo build --target=wasm32-unknown-unknown --release
-cp .\target\wasm32-unknown-unknown\release\rust-mywasm.wasm .\static\index.wasm
+wasm-gc .\target\wasm32-unknown-unknown\release\rust-mywasm.wasm -o .\static\index.wasm
 ```
 
 簡易サーバー
