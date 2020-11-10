@@ -1,4 +1,4 @@
-use rust_mywasm::*;
+use rust_wasm_sandbox::*;
 
 pub fn main() {
     log(&"Nao Tomori");
