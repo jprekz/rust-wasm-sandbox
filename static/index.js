@@ -41,8 +41,3 @@ WebAssembly.instantiateStreaming(fetch("index.wasm"), importObject())
     });
 
 let wasm_inst;
-
-window.addEventListener('beforeunload', (e) => {
-    // 16回リロードで発生するwarning対策 for Firefox
-    gl.getExtension('WEBGL_lose_context').loseContext();
-});
