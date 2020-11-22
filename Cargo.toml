@@ -3,8 +3,3 @@ name = "rust-wasm-sandbox"
 version = "0.1.0"
 authors = ["jprekz <jprekz@users.noreply.github.com>"]
 edition = "2018"
-
-[workspace]
-members = [
-    "server",
-]
