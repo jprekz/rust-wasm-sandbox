@@ -1,21 +1,32 @@
-use wasm_bindgen::prelude::*;
 use glow::*;
 
-#[wasm_bindgen(start)]
 pub fn main() {
     unsafe {
         // Create a context from a WebGL2 context on wasm32 targets
-        #[cfg(all(target_arch = "wasm32", feature = "web-sys"))]
-        let (_window, gl, _events_loop, render_loop, shader_version) = {
-            use wasm_bindgen::JsCast;
-            let canvas = web_sys::window()
-                .unwrap()
-                .document()
-                .unwrap()
-                .get_element_by_id("canvas")
-                .unwrap()
-                .dyn_into::<web_sys::HtmlCanvasElement>()
+        #[cfg(target_arch = "wasm32")]
+        let (gl, event_loop, window, shader_version) = {
+            use winit::{event_loop::EventLoop, window::WindowBuilder};
+
+            let event_loop = EventLoop::new();
+
+            let window = WindowBuilder::new()
+                .with_title("A fantastic window!")
+                .build(&event_loop)
                 .unwrap();
+
+            use winit::platform::web::WindowExtWebSys;
+
+            let canvas = window.canvas();
+
+            let wwindow = web_sys::window().unwrap();
+            let document = wwindow.document().unwrap();
+            let body = document.body().unwrap();
+
+            body.append_child(&canvas)
+                .expect("Append canvas to HTML body");
+
+            use wasm_bindgen::JsCast;
+
             let webgl2_context = canvas
                 .get_context("webgl2")
                 .unwrap()
@@ -23,10 +34,9 @@ pub fn main() {
                 .dyn_into::<web_sys::WebGl2RenderingContext>()
                 .unwrap();
             (
-                (),
                 glow::Context::from_webgl2_context(webgl2_context),
-                (),
-                glow::RenderLoop::from_request_animation_frame(),
+                event_loop,
+                window,
                 "#version 300 es",
             )
         };
@@ -50,7 +60,6 @@ pub fn main() {
             };
             (context, el, windowed_context, "#version 410")
         };
-
 
         let vertex_array = gl
             .create_vertex_array()
@@ -111,7 +120,6 @@ pub fn main() {
         gl.use_program(Some(program));
         gl.clear_color(0.1, 0.2, 0.3, 1.0);
 
-
         #[cfg(feature = "window-glutin")]
         {
             use glutin::event::{Event, WindowEvent};
@@ -127,6 +135,7 @@ pub fn main() {
                         windowed_context.window().request_redraw();
                     }
                     Event::RedrawRequested(_) => {
+                        println!("redraw requested");
                         gl.clear(glow::COLOR_BUFFER_BIT);
                         gl.draw_arrays(glow::TRIANGLES, 0, 3);
                         windowed_context.swap_buffers().unwrap();
@@ -148,14 +157,37 @@ pub fn main() {
         }
 
         #[cfg(not(feature = "window-glutin"))]
-        render_loop.run(move |running: &mut bool| {
-            gl.clear(glow::COLOR_BUFFER_BIT);
-            gl.draw_arrays(glow::TRIANGLES, 0, 3);
+        {
+            use winit::{
+                event::{DeviceEvent, Event, WindowEvent},
+                event_loop::ControlFlow,
+            };
 
-            if !*running {
-                gl.delete_program(program);
-                gl.delete_vertex_array(vertex_array);
-            }
-        });
+            event_loop.run(move |event, _, control_flow| {
+                *control_flow = ControlFlow::Wait;
+                match event {
+                    Event::LoopDestroyed => {
+                        return;
+                    }
+                    Event::MainEventsCleared => {
+                        window.request_redraw();
+                    }
+                    Event::RedrawRequested(_) => {
+                        web_sys::console::log_1(&"redraw requested".into());
+                        gl.clear(glow::COLOR_BUFFER_BIT);
+                        gl.draw_arrays(glow::TRIANGLES, 0, 3);
+                    }
+                    Event::WindowEvent { ref event, .. } => match event {
+                        WindowEvent::CloseRequested => {
+                            gl.delete_program(program);
+                            gl.delete_vertex_array(vertex_array);
+                            *control_flow = ControlFlow::Exit
+                        }
+                        _ => (),
+                    },
+                    _ => (),
+                }
+            });
+        }
     }
 }
