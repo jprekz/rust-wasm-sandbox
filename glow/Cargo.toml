@@ -17,6 +17,8 @@ wasm-bindgen = "0.2"
 glutin = { version = "0.24", optional = true }
 
 [features]
+default = ["web-sys"]
+web-sys = ["web_sys", "glow/web-sys"]
 window-glutin = ["glutin", "glow/glutin"]
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]

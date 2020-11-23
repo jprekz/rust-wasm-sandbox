@@ -262,6 +262,7 @@ dependencies = [
  "glow",
  "glutin",
  "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
