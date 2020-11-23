@@ -6,16 +6,33 @@ edition = "2018"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
+path = "src/main.rs"
 
 [dependencies]
 wasm-bindgen = "0.2"
+winit = {verion = "0.23.0", features = ["web-sys"]}
 
 [dependencies.web-sys]
-version = "0.3.4"
+version = "0.3.22"
 features = [
-  'Document',
-  'Element',
-  'HtmlElement',
-  'Node',
-  'Window',
+    'console',
+    "AddEventListenerOptions",
+    'CssStyleDeclaration',
+    'BeforeUnloadEvent',
+    'Document',
+    'DomRect',
+    'Element',
+    'Event',
+    'EventTarget',
+    'FocusEvent',
+    'HtmlCanvasElement',
+    'HtmlElement',
+    'KeyboardEvent',
+    'MediaQueryList',
+    'MediaQueryListEvent',
+    'MouseEvent',
+    'Node',
+    'PointerEvent',
+    'Window',
+    'WheelEvent'
 ]
