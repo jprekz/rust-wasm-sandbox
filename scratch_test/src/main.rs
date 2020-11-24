@@ -1,4 +1,4 @@
-use rust_wasm_sandbox::*;
+use scratch_test::*;
 
 pub fn main() {
     log(&"Nao Tomori");

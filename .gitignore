@@ -1,9 +1,4 @@
 /target
 **/*.rs.bk
 
-/static/*.wasm
-
 /.vscode
-
-/bindgen/target
-/glow/target

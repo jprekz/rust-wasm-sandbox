@@ -1,5 +1,5 @@
 [package]
-name = "rust-wasm-sandbox"
+name = "scratch_test"
 version = "0.1.0"
 authors = ["jprekz <jprekz@users.noreply.github.com>"]
 edition = "2018"
