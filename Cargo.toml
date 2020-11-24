@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "bindgen_test",
+    "glow_test",
+    "scratch_test",
+]

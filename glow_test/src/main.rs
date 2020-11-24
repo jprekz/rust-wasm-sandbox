@@ -159,7 +159,7 @@ pub fn main() {
         #[cfg(not(feature = "window-glutin"))]
         {
             use winit::{
-                event::{DeviceEvent, Event, WindowEvent},
+                event::{Event, WindowEvent},
                 event_loop::ControlFlow,
             };
 

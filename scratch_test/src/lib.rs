@@ -40,6 +40,7 @@ pub fn next_frame(f: impl FnMut() + 'static) {
 static mut CALLBACK: Option<Box<dyn FnMut()>> = None;
 #[no_mangle]
 fn callback() {
+    #[cfg(target_arch = "wasm32")]
     unsafe {
         if let Some(c) = &mut CALLBACK {
             c();
