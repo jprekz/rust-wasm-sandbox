@@ -42,7 +42,7 @@ pub fn main() {
         };
 
         // Create a context from a glutin window on non-wasm32 targets
-        #[cfg(feature = "window-glutin")]
+        #[cfg(not(target_arch = "wasm32"))]
         let (gl, event_loop, windowed_context, shader_version) = {
             let el = glutin::event_loop::EventLoop::new();
             let wb = glutin::window::WindowBuilder::new()
@@ -120,7 +120,7 @@ pub fn main() {
         gl.use_program(Some(program));
         gl.clear_color(0.1, 0.2, 0.3, 1.0);
 
-        #[cfg(feature = "window-glutin")]
+        #[cfg(not(target_arch = "wasm32"))]
         {
             use glutin::event::{Event, WindowEvent};
             use glutin::event_loop::ControlFlow;
@@ -156,7 +156,7 @@ pub fn main() {
             });
         }
 
-        #[cfg(not(feature = "window-glutin"))]
+        #[cfg(target_arch = "wasm32")]
         {
             use winit::{
                 event::{Event, WindowEvent},
