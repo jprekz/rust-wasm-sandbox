@@ -1,8 +1,3 @@
-サーバー
-```
-cargo install https
-http
-```
 
 メモ
 - WebGLしたい
