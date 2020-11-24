@@ -1,12 +1,28 @@
 
 メモ
 - WebGLしたい
+- とりあえず依存無しでWebGLの呼び出しを試みた（scratch_test）
+  - 参考：https://zerogram.info/?p=2633
 - "Rust 側で用意したメモリをそっくりそのまま Canvas に挿入する"ことは割と簡単にできそう
   （参考：http://nmi.jp/2018-03-19-WebAssembly-with-Rust)
-- `wasm-bindgen` くらいは使ってもいい気がした
+  - ネイティブで同じことできそうなやつ：https://github.com/rust-windowing/winit-blit
+  - ハードウェアアクセラレーションなしでクロスプラットフォームなアプリ書くなら [`winit`] と
+  上記手法の組み合わせが最小構成かも
+- [`winit`] と [`wasm-bindgen`] でクロスプラットフォームなウィンドウ初期化テスト（bindgen-test）
+  - 描画は行っていないがイベントループの記述を共通にできることが確認できた
+    - イベントも取れてるっぽい
+- [`glow`] でクロスプラットフォームなウィンドウ初期化と描画テスト（glow-test）
+  - webの場合は [`winit`] で初期化とイベント管理ができる。GLコンテキストは
+  `web_sys::WebGl2RenderingContext` を直接 [`glow`] に渡すことができる
+  - nativeの場合は [`glutin`] で初期化とイベント管理を行う。 [`glutin`] はGLコンテキストを
+  取得するライブラリで `wasm32-unknown-unknown` では動作しない。 [`glutin`] は [`winit`] を
+  `pub use` しているので中身は同じなのだが……
+
+[`winit`]: https://github.com/rust-windowing/winit
+[`wasm-bindgen`]: https://github.com/rustwasm/wasm-bindgen
+[`glow`]: https://github.com/grovesNL/glow
+[`glutin`]: https://github.com/rust-windowing/glutin
 
 その他リンク
 - "Introduction - Rust and WebAssembly"
   https://rustwasm.github.io/docs/book/introduction.html
-- "Rust+Wasm+WebGLはじめました　環境構築=>Hello World =>画面クリアまで（Windows10） – ZeroGram"
-  https://zerogram.info/?p=2633
