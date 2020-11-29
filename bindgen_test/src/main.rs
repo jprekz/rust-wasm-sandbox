@@ -1,11 +1,9 @@
-use wasm_bindgen::prelude::*;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
 
-#[wasm_bindgen(start)]
 pub fn main() {
     let event_loop = EventLoop::new();
 
