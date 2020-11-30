@@ -2,5 +2,6 @@
 members = [
     "bindgen_test",
     "glow_test",
+    "golem_test",
     "scratch_test",
 ]

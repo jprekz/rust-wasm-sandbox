@@ -1,0 +1,19 @@
+[package]
+name = "golem_test"
+version = "0.1.0"
+authors = ["jprekz <jprekz@users.noreply.github.com>"]
+edition = "2018"
+
+[lib]
+name = "golem_test_web"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+golem = "0.1.7"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+blinds = { version = "0.1", default-features = false, features = ["gl"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "0.2"
+blinds = { version = "0.1", default-features = false, features = ["gl", "web-sys"] }
