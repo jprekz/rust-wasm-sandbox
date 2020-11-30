@@ -17,11 +17,15 @@
   - nativeの場合は [`glutin`] で初期化とイベント管理を行う。 [`glutin`] はGLコンテキストを
   取得するライブラリで `wasm32-unknown-unknown` では動作しない。 [`glutin`] は [`winit`] を
   `pub use` しているので中身は同じなのだが……
+- [`winit`] 等のラッパー [`blinds`] と [`glow`] のラッパー [`golem`] のテスト（golem_test）
+  - 最近いろいろ変わってるっぽくてなんとも
 
 [`winit`]: https://github.com/rust-windowing/winit
 [`wasm-bindgen`]: https://github.com/rustwasm/wasm-bindgen
 [`glow`]: https://github.com/grovesNL/glow
 [`glutin`]: https://github.com/rust-windowing/glutin
+[`blinds`]: https://github.com/ryanisaacg/blinds
+[`golem`]: https://github.com/ryanisaacg/golem
 
 その他リンク
 - "Introduction - Rust and WebAssembly"
