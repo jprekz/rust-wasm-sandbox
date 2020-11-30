@@ -1,5 +1,9 @@
+## ビルド
+各ディレクトリ内で
+- nativeの場合 `$ cargo run`
+- webの場合 `$ wasm-pack build --target web` のち適当なwebサーバーを立てて開く
 
-メモ
+## メモ
 - WebGLしたい
 - とりあえず依存無しでWebGLの呼び出しを試みた（scratch_test）
   - 参考：https://zerogram.info/?p=2633
@@ -27,6 +31,8 @@
 [`blinds`]: https://github.com/ryanisaacg/blinds
 [`golem`]: https://github.com/ryanisaacg/golem
 
-その他リンク
+## その他リンク
 - "Introduction - Rust and WebAssembly"
   https://rustwasm.github.io/docs/book/introduction.html
+- "rustwasm/wasm-pack: 📦✨ your favorite rust -> wasm workflow tool!"
+  https://github.com/rustwasm/wasm-pack
