@@ -1693,6 +1693,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "wrapper_test"
+version = "0.1.0"
+dependencies = [
+ "glutin",
+ "golem",
+ "wasm-bindgen",
+ "web-sys",
+ "winit 0.23.0",
+]
+
+[[package]]
+name = "wrapper_test_bin"
+version = "0.1.0"
+dependencies = [
+ "wasm-bindgen",
+ "wrapper_test",
+]
+
+[[package]]
 name = "ws2_32-sys"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

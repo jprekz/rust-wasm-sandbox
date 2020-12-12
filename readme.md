@@ -23,6 +23,9 @@
   `pub use` しているので中身は同じなのだが……
 - [`winit`] 等のラッパー [`blinds`] と [`glow`] のラッパー [`golem`] のテスト（golem_test）
   - 最近いろいろ変わってるっぽくてなんとも
+- [`glutin`] / [`winit`] と [`golem`] を [`nannou`] 風のAPIで雑にラップしてみたテスト（wrapper_test）
+  - wrapper_test はライブラリで wrapper_test_bin は wrapper_test を使ってみたやつ
+  - wrapper_test_bin のソースはぱっと見いい感じではある
 
 [`winit`]: https://github.com/rust-windowing/winit
 [`wasm-bindgen`]: https://github.com/rustwasm/wasm-bindgen
@@ -30,6 +33,7 @@
 [`glutin`]: https://github.com/rust-windowing/glutin
 [`blinds`]: https://github.com/ryanisaacg/blinds
 [`golem`]: https://github.com/ryanisaacg/golem
+[`nannou`]: https://github.com/nannou-org/nannou
 
 ## その他リンク
 - "Introduction - Rust and WebAssembly"

@@ -4,4 +4,6 @@ members = [
     "glow_test",
     "golem_test",
     "scratch_test",
+    "wrapper_test",
+    "wrapper_test_bin",
 ]

@@ -1,0 +1,13 @@
+[package]
+name = "wrapper_test_bin"
+version = "0.1.0"
+authors = ["jprekz <jprekz@users.noreply.github.com>"]
+edition = "2018"
+
+[lib]
+name = "wrapper_test_web"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wasm-bindgen = "0.2"
+wrapper_test = {path = "../wrapper_test"}
