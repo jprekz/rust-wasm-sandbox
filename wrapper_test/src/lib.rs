@@ -49,7 +49,6 @@ use glutin::{
     event::{Event, WindowEvent},
     event_loop::ControlFlow,
     event_loop::EventLoop,
-    window::Window,
     PossiblyCurrent, WindowedContext,
 };
 
@@ -122,11 +121,9 @@ impl App {
 
             let windowed_context = unsafe { windowed_context.make_current().unwrap() };
 
-            let context = unsafe {
-                golem::glow::Context::from_loader_function(|s| {
-                    windowed_context.get_proc_address(s) as *const _
-                })
-            };
+            let context = golem::glow::Context::from_loader_function(|s| {
+                windowed_context.get_proc_address(s) as *const _
+            });
 
             App {
                 draw: golem::Context::from_glow(context).unwrap(),
