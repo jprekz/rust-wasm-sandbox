@@ -1,40 +1,6 @@
+pub mod event;
+
 pub use golem;
-
-pub fn log(txt: impl Into<&'static str>) {
-    let txt = txt.into();
-    #[cfg(not(target_arch = "wasm32"))]
-    println!("{}", txt);
-    #[cfg(target_arch = "wasm32")]
-    web_sys::console::log_1(&txt.into());
-}
-
-pub type InitFn<Model> = fn(&App) -> Model;
-pub type UpdateFn<Model> = fn(&App, &mut Model);
-pub type ViewFn<Model> = fn(&App, &Model);
-
-pub struct Builder<Model> {
-    init_fn: InitFn<Model>,
-    update_fn: UpdateFn<Model>,
-    view_fn: ViewFn<Model>,
-}
-impl<Model: 'static> Builder<Model> {
-    pub fn init(init_fn: InitFn<Model>) -> Builder<Model> {
-        Builder {
-            init_fn: init_fn,
-            update_fn: |_, _| {},
-            view_fn: |_, _| {},
-        }
-    }
-    pub fn update(self, update_fn: UpdateFn<Model>) -> Builder<Model> {
-        Builder { update_fn, ..self }
-    }
-    pub fn view(self, view_fn: ViewFn<Model>) -> Builder<Model> {
-        Builder { view_fn, ..self }
-    }
-    pub fn run(self) {
-        App::new().run(self);
-    }
-}
 
 #[cfg(target_arch = "wasm32")]
 use winit::{
@@ -51,6 +17,40 @@ use glutin::{
     event_loop::EventLoop,
     PossiblyCurrent, WindowedContext,
 };
+
+pub type InitFn<Model> = fn(&App) -> Model;
+pub type EventFn<Model> = fn(&App, &mut Model, &event::Event);
+pub type UpdateFn<Model> = fn(&App, &mut Model);
+pub type ViewFn<Model> = fn(&App, &Model);
+
+pub struct Builder<Model> {
+    init_fn: InitFn<Model>,
+    event_fn: EventFn<Model>,
+    update_fn: UpdateFn<Model>,
+    view_fn: ViewFn<Model>,
+}
+impl<Model: 'static> Builder<Model> {
+    pub fn init(init_fn: InitFn<Model>) -> Builder<Model> {
+        Builder {
+            init_fn,
+            event_fn: |_, _, _| {},
+            update_fn: |_, _| {},
+            view_fn: |_, _| {},
+        }
+    }
+    pub fn event(self, event_fn: EventFn<Model>) -> Builder<Model> {
+        Builder { event_fn, ..self }
+    }
+    pub fn update(self, update_fn: UpdateFn<Model>) -> Builder<Model> {
+        Builder { update_fn, ..self }
+    }
+    pub fn view(self, view_fn: ViewFn<Model>) -> Builder<Model> {
+        Builder { view_fn, ..self }
+    }
+    pub fn run(self) {
+        App::new().run(self);
+    }
+}
 
 pub struct App {
     pub draw: golem::Context,
@@ -134,9 +134,18 @@ impl App {
         }
     }
 
+    pub fn window_size(&self) -> event::PhysicalSize<u32> {
+        #[cfg(target_arch = "wasm32")]
+        return self.window.inner_size();
+
+        #[cfg(not(target_arch = "wasm32"))]
+        self.windowed_context.window().inner_size()
+    }
+
     pub fn run<Model: 'static>(mut self, builder: Builder<Model>) {
         let Builder {
             init_fn,
+            event_fn,
             update_fn,
             view_fn,
         } = builder;
@@ -146,8 +155,16 @@ impl App {
         event_loop.run(move |event, _, control_flow| {
             *control_flow = ControlFlow::Wait;
             match event {
-                Event::LoopDestroyed => {
-                    return;
+                Event::WindowEvent { ref event, .. } => {
+                    match event {
+                        #[cfg(not(target_arch = "wasm32"))]
+                        WindowEvent::Resized(physical_size) => {
+                            self.windowed_context.resize(*physical_size);
+                        }
+                        WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
+                        _ => (),
+                    };
+                    event_fn(&self, &mut model, event);
                 }
                 Event::MainEventsCleared => {
                     update_fn(&self, &mut model);
@@ -163,16 +180,19 @@ impl App {
                     #[cfg(not(target_arch = "wasm32"))]
                     self.windowed_context.swap_buffers().unwrap();
                 }
-                Event::WindowEvent { ref event, .. } => match event {
-                    #[cfg(not(target_arch = "wasm32"))]
-                    WindowEvent::Resized(physical_size) => {
-                        self.windowed_context.resize(*physical_size);
-                    }
-                    WindowEvent::CloseRequested => *control_flow = ControlFlow::Exit,
-                    _ => (),
-                },
+                Event::LoopDestroyed => {
+                    return;
+                }
                 _ => (),
             }
         });
     }
+}
+
+pub fn log(txt: impl AsRef<str>) {
+    let txt = txt.as_ref();
+    #[cfg(not(target_arch = "wasm32"))]
+    println!("{}", txt);
+    #[cfg(target_arch = "wasm32")]
+    web_sys::console::log_1(&txt.into());
 }
