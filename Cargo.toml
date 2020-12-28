@@ -2,6 +2,7 @@
 members = [
     "bindgen_test",
     "glow_test",
+    "gltf_test",
     "golem_test",
     "scratch_test",
     "wrapper_test",
