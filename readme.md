@@ -26,6 +26,10 @@
 - [`glutin`] / [`winit`] と [`golem`] を [`nannou`] 風のAPIで雑にラップしてみたテスト（wrapper_test）
   - wrapper_test はライブラリで wrapper_test_bin は wrapper_test を使ってみたやつ
   - wrapper_test_bin のソースはぱっと見いい感じではある
+- glTF形式の3Dモデルを雑に表示してみるテスト（gltf_test）
+  - web環境でファイルをfetchしようとすると非同期処理になるのでinit関数をasyncにしたい
+    - やはり [`blinds`] 使えばいいのでは？
+    - 現状の実装ではファイルを `include_bytes!` してる
 
 [`winit`]: https://github.com/rust-windowing/winit
 [`wasm-bindgen`]: https://github.com/rustwasm/wasm-bindgen
