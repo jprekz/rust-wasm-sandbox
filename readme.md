@@ -12,9 +12,6 @@
   - ネイティブで同じことできそうなやつ：https://github.com/rust-windowing/winit-blit
   - ハードウェアアクセラレーションなしでクロスプラットフォームなアプリ書くなら [`winit`] と
   上記手法の組み合わせが最小構成かも
-- [`winit`] と [`wasm-bindgen`] でクロスプラットフォームなウィンドウ初期化テスト（bindgen-test）
-  - 描画は行っていないがイベントループの記述を共通にできることが確認できた
-    - イベントも取れてるっぽい
 - [`glow`] でクロスプラットフォームなウィンドウ初期化と描画テスト（glow-test）
   - webの場合は [`winit`] で初期化とイベント管理ができる。GLコンテキストは
   `web_sys::WebGl2RenderingContext` を直接 [`glow`] に渡すことができる
@@ -32,7 +29,6 @@
     - 現状の実装ではファイルを `include_bytes!` してる
 
 [`winit`]: https://github.com/rust-windowing/winit
-[`wasm-bindgen`]: https://github.com/rustwasm/wasm-bindgen
 [`glow`]: https://github.com/grovesNL/glow
 [`glutin`]: https://github.com/rust-windowing/glutin
 [`blinds`]: https://github.com/ryanisaacg/blinds

@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "bindgen_test",
     "glow_test",
     "gltf_test",
     "golem_test",
