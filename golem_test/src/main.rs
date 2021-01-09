@@ -5,18 +5,24 @@ use golem::{
     ElementBuffer, GeometryMode, GolemError, ShaderDescription, ShaderProgram, VertexBuffer,
 };
 
+fn context_from_blinds(window: &Window) -> Result<Context, GolemError> {
+    #[cfg(not(target_arch = "wasm32"))]
+    let glow_ctx =
+        golem::glow::Context::from_loader_function(|s| window.get_proc_address(s) as *const _);
+    #[cfg(target_arch = "wasm32")]
+    let glow_ctx = golem::glow::Context::from_webgl1_context(window.webgl_context());
+
+    Context::from_glow(glow_ctx)
+}
+
 pub fn main() {
-    run_gl(Settings::default(), |window, gfx, events| async move {
-        app(window, gfx, events).await.unwrap()
+    run(Settings::default(), |window, events| async move {
+        app(window, events).await.unwrap()
     });
 }
 
-async fn app(
-    window: Window,
-    ctx: golem::glow::Context,
-    mut events: EventStream,
-) -> Result<(), GolemError> {
-    let ctx = &Context::from_glow(ctx)?;
+async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> {
+    let ctx = &context_from_blinds(&window)?;
 
     #[rustfmt::skip]
     let vertices = [
@@ -35,12 +41,12 @@ async fn app(
             fragment_input: &[Attribute::new("frag_color", AttributeType::Vector(D4))],
             uniforms: &[],
             vertex_shader: r#" void main() {
-            gl_Position = vec4(vert_position, 0, 1);
-            frag_color = vert_color;
-        }"#,
+                gl_Position = vec4(vert_position, 0, 1);
+                frag_color = vert_color;
+            }"#,
             fragment_shader: r#" void main() {
-            gl_FragColor = frag_color;
-        }"#,
+                gl_FragColor = frag_color;
+            }"#,
         },
     )?;
 
