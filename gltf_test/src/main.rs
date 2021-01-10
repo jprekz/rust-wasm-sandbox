@@ -12,6 +12,7 @@ struct Primitive {
     vb: VertexBuffer,
     eb: ElementBuffer,
     indices_len: usize,
+    mode: GeometryMode,
 }
 impl Primitive {
     fn from_gltf_primitive(ctx: &Context, primitive: &gltf::Primitive, buffer: &[u8]) -> Primitive {
@@ -27,10 +28,20 @@ impl Primitive {
         let mut eb = ElementBuffer::new(ctx).unwrap();
         vb.set_data(&vertices);
         eb.set_data(&indices);
+        let mode = match primitive.mode() {
+            gltf::mesh::Mode::Points => GeometryMode::Points,
+            gltf::mesh::Mode::Lines => GeometryMode::Lines,
+            gltf::mesh::Mode::LineLoop => GeometryMode::LineLoop,
+            gltf::mesh::Mode::LineStrip => GeometryMode::LineStrip,
+            gltf::mesh::Mode::Triangles => GeometryMode::Triangles,
+            gltf::mesh::Mode::TriangleStrip => GeometryMode::TriangleStrip,
+            gltf::mesh::Mode::TriangleFan => GeometryMode::TriangleFan,
+        };
         Primitive {
             vb,
             eb,
             indices_len: indices.len(),
+            mode,
         }
     }
 }
@@ -59,7 +70,6 @@ fn init(app: &App) -> Model {
             for primitive in mesh.primitives() {
                 println!("  primitive:");
                 let _material = primitive.material();
-                println!("    mode: {:?}", primitive.mode());
                 primitives.push(Primitive::from_gltf_primitive(
                     ctx,
                     &primitive,
@@ -158,7 +168,7 @@ fn view(app: &App, model: &Model) {
                     &primitive.vb,
                     &primitive.eb,
                     0..primitive.indices_len,
-                    GeometryMode::Triangles,
+                    primitive.mode,
                 )
                 .unwrap();
         }
