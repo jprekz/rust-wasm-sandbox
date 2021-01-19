@@ -9,6 +9,26 @@ name = "gltf_test_web"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-wasm-bindgen = "0.2"
-wrapper_test = {path = "../wrapper_test"}
+blinds = "0.2.0"
 gltf = { version = "0.15", features = ["import", "utils"] }
+mint = "0.5"
+nalgebra-glm = "0.1"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+golem = "0.1.7"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+golem = { version = "0.1.7", features = ["web-sys"] }
+js-sys = "0.3"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]
+version = "0.3"
+features = [
+  'Request',
+  'RequestInit',
+  'RequestMode',
+  'Response',
+  'Window',
+]
