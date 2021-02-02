@@ -1,4 +1,7 @@
+use std::convert::TryInto;
+
 use golem::*;
+use nalgebra_glm as glm;
 
 pub struct Gltf {
     shader: ShaderProgram,
@@ -52,16 +55,12 @@ impl Gltf {
                     "frag_color",
                     AttributeType::Vector(Dimension::D4),
                 )],
-                uniforms: &[
-                    Uniform::new(
-                        "resolution",
-                        UniformType::Vector(NumberType::Float, Dimension::D2),
-                    ),
-                    Uniform::new("zoom_factor", UniformType::Scalar(NumberType::Float)),
-                ],
+                uniforms: &[Uniform::new(
+                    "mvp_matrix",
+                    UniformType::Matrix(Dimension::D4),
+                )],
                 vertex_shader: r#" void main() {
-                    vec2 projection = resolution / min(resolution.x, resolution.y);
-                    gl_Position = vec4(vert_position.xy * zoom_factor / projection, 0, 1);
+                    gl_Position = mvp_matrix * vec4(vert_position, 1.0);
                     frag_color = vec4(0.5, 0.5, 0.5, 1);
                 }"#,
                 fragment_shader: r#" void main() {
@@ -74,14 +73,13 @@ impl Gltf {
         Ok(Gltf { shader, primitives })
     }
 
-    pub fn draw(&mut self, window_size: [f32; 2], scroll_absolute: f32) -> Result<(), GolemError> {
+    pub fn draw(&mut self, mvp_matrix: &glm::Mat4) -> Result<(), GolemError> {
         self.shader.bind();
 
-        self.shader
-            .set_uniform("resolution", UniformValue::Vector2(window_size.into()))?;
-        let zoom_factor = 1.1_f32.powf(scroll_absolute);
-        self.shader
-            .set_uniform("zoom_factor", UniformValue::Float(zoom_factor))?;
+        self.shader.set_uniform(
+            "mvp_matrix",
+            UniformValue::Matrix4(glm::value_ptr(mvp_matrix).try_into().unwrap()),
+        )?;
 
         for primitive in &self.primitives {
             unsafe {
