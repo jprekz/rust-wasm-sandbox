@@ -1,3 +1,4 @@
+mod fps_counter;
 mod golem_gltf;
 
 use blinds::*;
@@ -70,6 +71,9 @@ async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> 
 
     let mut p_matrix = make_p_matrix(window_size);
 
+    let mut prev_time = std::time::Instant::now();
+    let mut frame_count = 0usize;
+
     loop {
         while let Some(event) = events.next_event().await {
             use blinds::event::*;
@@ -92,6 +96,13 @@ async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> 
                 }
                 _ => {}
             }
+        }
+
+        frame_count += 1;
+        if prev_time.elapsed() >= std::time::Duration::new(1, 0) {
+            prev_time = std::time::Instant::now();
+            println!("{}", frame_count);
+            frame_count = 0;
         }
 
         ctx.set_clear_color(0.1, 0.2, 0.3, 1.0);
