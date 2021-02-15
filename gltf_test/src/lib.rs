@@ -2,6 +2,7 @@
 
 mod fps_counter;
 mod golem_gltf;
+mod time;
 
 use blinds::*;
 use fps_counter::FpsCounter;
