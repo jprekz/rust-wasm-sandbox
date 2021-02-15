@@ -1,6 +1,10 @@
+#![allow(dead_code)]
+
+mod fps_counter;
 mod golem_gltf;
 
 use blinds::*;
+use fps_counter::FpsCounter;
 use golem::*;
 use nalgebra_glm as glm;
 
@@ -70,6 +74,8 @@ async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> 
 
     let mut p_matrix = make_p_matrix(window_size);
 
+    let mut fps_counter = FpsCounter::new(ctx);
+
     loop {
         while let Some(event) = events.next_event().await {
             use blinds::event::*;
@@ -94,11 +100,14 @@ async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> 
             }
         }
 
+        fps_counter.count();
+
         ctx.set_clear_color(0.1, 0.2, 0.3, 1.0);
         ctx.clear();
 
         let mvp_matrix = p_matrix * v_matrix * m_matrix;
         gltf_model.draw(&mvp_matrix)?;
+        fps_counter.draw(&p_matrix)?;
 
         window.present();
     }
