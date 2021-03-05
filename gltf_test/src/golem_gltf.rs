@@ -47,10 +47,10 @@ impl Gltf {
         let shader = ShaderProgram::new(
             ctx,
             ShaderDescription {
-                vertex_input: &[Attribute::new(
-                    "vert_position",
-                    AttributeType::Vector(Dimension::D3),
-                )],
+                vertex_input: &[
+                    Attribute::new("vert_position", AttributeType::Vector(Dimension::D3)),
+                    Attribute::new("vert_normal", AttributeType::Vector(Dimension::D3)),
+                ],
                 fragment_input: &[Attribute::new(
                     "frag_color",
                     AttributeType::Vector(Dimension::D4),
@@ -61,7 +61,9 @@ impl Gltf {
                 )],
                 vertex_shader: r#" void main() {
                     gl_Position = mvp_matrix * vec4(vert_position, 1.0);
-                    frag_color = vec4(0.5, 0.5, 0.5, 1);
+                    vec3 light = normalize(vec3(1.0, 1.0, 0.0));
+                    float diffuse = clamp(dot(vert_normal, light), 0.1, 1.0);
+                    frag_color = vec4(1.0, 1.0, 1.0, 1) * vec4(vec3(diffuse), 1.0);
                 }"#,
                 fragment_shader: r#" void main() {
                     gl_FragColor = frag_color;
@@ -106,8 +108,11 @@ impl Primitive {
 
         let mut vertices = Vec::new();
         if let Some(pos) = reader.read_positions() {
-            for p in pos.into_iter() {
-                vertices.extend_from_slice(&p);
+            if let Some(normal) = reader.read_normals() {
+                for (p, n) in pos.into_iter().zip(normal.into_iter()) {
+                    vertices.extend_from_slice(&p);
+                    vertices.extend_from_slice(&n);
+                }
             }
         }
         let indices: Vec<u32> = reader.read_indices().unwrap().into_u32().collect();

@@ -125,8 +125,10 @@ async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> 
         ctx.set_clear_color(0.1, 0.2, 0.3, 1.0);
         ctx.clear();
 
+        ctx.set_depth_test_mode(Some(depth::DepthTestMode::default()));
         let mvp_matrix = p_matrix * v_matrix * m_matrix;
         gltf_model.draw(&mvp_matrix)?;
+        ctx.set_depth_test_mode(None);
         fps_counter.draw(&p_matrix)?;
 
         window.present();
