@@ -68,8 +68,10 @@ async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> 
 
     let mut scroll_absolute = 10.0f32;
     let mut window_size = glm::make_vec2(window.size().as_ref()) * window.scale_factor();
+    let mut mouse_dragging = false;
+    let mut mouse_location = glm::zero::<glm::Vec2>();
 
-    let m_matrix: glm::Mat4 = glm::identity();
+    let mut m_matrix: glm::Mat4 = glm::identity();
 
     let mut v_matrix = make_v_matrix(scroll_absolute);
 
@@ -95,6 +97,23 @@ async fn app(window: Window, mut events: EventStream) -> Result<(), GolemError> 
                 }
                 Event::ScrollInput(ScrollDelta::Lines(delta)) => {
                     scroll_absolute -= delta.y;
+                    v_matrix = make_v_matrix(scroll_absolute);
+                }
+                Event::PointerInput(e) => {
+                    if e.button() == MouseButton::Left {
+                        mouse_dragging = e.is_down();
+                    }
+                }
+                Event::PointerMoved(e) => {
+                    let mouse_location_n = glm::make_vec2(e.location().as_ref());
+                    let mouse_moved = if mouse_dragging {
+                        mouse_location_n - mouse_location
+                    } else {
+                        glm::zero()
+                    };
+                    m_matrix = glm::rotate_x(&m_matrix, mouse_moved.y / 100.0);
+                    m_matrix = glm::rotate_y(&m_matrix, mouse_moved.x / 100.0);
+                    mouse_location = mouse_location_n;
                     v_matrix = make_v_matrix(scroll_absolute);
                 }
                 _ => {}
