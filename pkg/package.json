@@ -1,0 +1,13 @@
+{
+  "name": "gltf_test",
+  "collaborators": [
+    "jprekz <jprekz@users.noreply.github.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "gltf_test_lib_bg.wasm",
+    "gltf_test_lib.js"
+  ],
+  "module": "gltf_test_lib.js",
+  "sideEffects": false
+}
