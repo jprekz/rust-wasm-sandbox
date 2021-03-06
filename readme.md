@@ -1,3 +1,11 @@
+## デモ
+https://jprekz.github.io/rust-wasm-sandbox/
+
+glTF形式の簡単な3Dモデルデータを読み込み、WebGLを用いて描画するデモンストレーションです。
+プログラムはRustで書かれており、WebAssemblyにコンパイルすることでブラウザ上で動作させています。
+
+ソースはこのリポジトリ内の /gltf_test にあります。
+
 ## ビルド
 各ディレクトリ内で
 - nativeの場合 `$ cargo run`
