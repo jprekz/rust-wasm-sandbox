@@ -32,6 +32,7 @@ glTF形式の簡単な3Dモデルデータを読み込み、WebGLを用いて描
   - wrapper_test はライブラリで wrapper_test_bin は wrapper_test を使ってみたやつ
   - wrapper_test_bin のソースはぱっと見いい感じではある
 - glTF形式の3Dモデルを雑に表示してみるテスト（gltf_test）
+  - [`gltf-viewer`] のコードをだいぶ参考にしている
   - web環境でファイルをfetchしようとすると非同期処理になるので [`blinds`] を使うと便利
 
 [`winit`]: https://github.com/rust-windowing/winit
@@ -40,6 +41,7 @@ glTF形式の簡単な3Dモデルデータを読み込み、WebGLを用いて描
 [`blinds`]: https://github.com/ryanisaacg/blinds
 [`golem`]: https://github.com/ryanisaacg/golem
 [`nannou`]: https://github.com/nannou-org/nannou
+[`gltf-viewer`]: https://github.com/bwasty/gltf-viewer
 
 ## その他リンク
 - "Introduction - Rust and WebAssembly"
