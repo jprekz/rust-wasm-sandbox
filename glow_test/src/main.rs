@@ -53,11 +53,9 @@ pub fn main() {
                 .build_windowed(wb, &el)
                 .unwrap();
             let windowed_context = windowed_context.make_current().unwrap();
-            let context = unsafe {
-                glow::Context::from_loader_function(|s| {
-                    windowed_context.get_proc_address(s) as *const _
-                })
-            };
+            let context = glow::Context::from_loader_function(|s| {
+                windowed_context.get_proc_address(s) as *const _
+            });
             (context, el, windowed_context, "#version 410")
         };
 
@@ -101,7 +99,7 @@ pub fn main() {
             gl.shader_source(shader, &format!("{}\n{}", shader_version, shader_source));
             gl.compile_shader(shader);
             if !gl.get_shader_compile_status(shader) {
-                panic!(gl.get_shader_info_log(shader));
+                panic!("{}", gl.get_shader_info_log(shader));
             }
             gl.attach_shader(program, shader);
             shaders.push(shader);
@@ -109,7 +107,7 @@ pub fn main() {
 
         gl.link_program(program);
         if !gl.get_program_link_status(program) {
-            panic!(gl.get_program_info_log(program));
+            panic!("{}", gl.get_program_info_log(program));
         }
 
         for shader in shaders {

@@ -1,3 +1,5 @@
+#![allow(unused)]
+
 #[cfg(target_arch = "wasm32")]
 extern "C" {
     fn js_log(ptr: usize, byte_size: usize);
