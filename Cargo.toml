@@ -3,6 +3,8 @@ members = [
     "glow_test",
     "gltf_test",
     "golem_test",
+    "plugin_host_test",
+    "plugin_test",
     "scratch_test",
     "wrapper_test",
     "wrapper_test_bin",
